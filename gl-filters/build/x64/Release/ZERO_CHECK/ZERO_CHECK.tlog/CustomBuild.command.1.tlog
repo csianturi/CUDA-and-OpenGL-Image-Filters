@@ -1,0 +1,10 @@
+^C:\NVIDIA-PREP\GL-FILTERS\BUILD\CMAKEFILES\72230AC96EBA87FDC9F5CDA12D2E5BB5\GENERATE.STAMP.RULE
+setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -SC:/nvidia-prep/gl-filters -BC:/nvidia-prep/gl-filters/build --check-stamp-list CMakeFiles/generate.stamp.list --vs-solution-file C:/nvidia-prep/gl-filters/build/gl_filters.sln
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd

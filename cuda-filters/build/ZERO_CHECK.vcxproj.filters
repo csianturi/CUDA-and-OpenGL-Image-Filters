@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <CustomBuild Include="C:\nvidia-prep\cuda-filters\build\CMakeFiles\0b703389ee9d12e89f7e34c7382de9c1\generate.stamp.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="CMake Rules">
+      <UniqueIdentifier>{9E420327-42D5-34F0-A379-644D5DB3A8F0}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

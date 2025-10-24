@@ -1,0 +1,3 @@
+C:/nvidia-prep/cuda-filters/build/CMakeFiles/cuda_gray.dir
+C:/nvidia-prep/cuda-filters/build/CMakeFiles/ALL_BUILD.dir
+C:/nvidia-prep/cuda-filters/build/CMakeFiles/ZERO_CHECK.dir

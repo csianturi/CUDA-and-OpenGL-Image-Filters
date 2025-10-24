@@ -1,0 +1,3 @@
+C:/nvidia-prep/gl-filters/build/CMakeFiles/gl_window.dir
+C:/nvidia-prep/gl-filters/build/CMakeFiles/ALL_BUILD.dir
+C:/nvidia-prep/gl-filters/build/CMakeFiles/ZERO_CHECK.dir
