@@ -19,7 +19,8 @@ I also included another blur implementation that uses shared memory instead of t
 <img width="1920" height="1080" alt="output_cpu" src="https://github.com/user-attachments/assets/74b74590-4e7f-4615-860a-cf49486444da" />
 
 ### Performance
-` C:\nvidia-prep\cuda-filters\src>grayscale.exe
+```
+C:\nvidia-prep\cuda-filters\src>grayscale.exe
 CPU time: 19.274 ms
 Mismatches: 0
 Wrote grayscale images to images/output_cpu.png and output_gpu.png
@@ -30,7 +31,8 @@ H2D           : 0.611
 Kernel        : 0.742
 D2H           : 0.524
 Total         : 1.877
-Speedup (CPU/Total): 10.27x `
+Speedup (CPU/Total): 10.27x
+```
 
 ## Blur Filter (using global memory)
 
@@ -42,7 +44,8 @@ Speedup (CPU/Total): 10.27x `
 <img width="1920" height="1080" alt="output_blur_gpu" src="https://github.com/user-attachments/assets/7a1b7301-6e03-4c03-8d2f-494622612a40" />
 
 ### Performance
-` C:\nvidia-prep\cuda-filters\src>blur.exe
+```
+C:\nvidia-prep\cuda-filters\src>blur.exe
 Loaded image: 1920x1080
 CPU blur: 88.056 ms
 Wrote CPU blurred image -> output_blur_cpu.png
@@ -55,7 +58,8 @@ D2H transfer : 0.708
 Total GPU    : 1.925
 Speedup (CPU / Total GPU): 45.74x
 Mismatches: 0
-Wrote GPU blurred image -> output_blur_gpu.png `
+Wrote GPU blurred image -> output_blur_gpu.png
+```
 
 ## Blur Filter (using shared memory)
 
@@ -66,7 +70,8 @@ Wrote GPU blurred image -> output_blur_gpu.png `
 <img width="1920" height="1080" alt="output_blur_shared_gpu" src="https://github.com/user-attachments/assets/d3741805-fd59-4ed9-81d1-74b3e1fb8bbe" />
 
 ### Performance
-` C:\nvidia-prep\cuda-filters\src>blur_shared.exe
+```
+C:\nvidia-prep\cuda-filters\src>blur_shared.exe
 Loaded image: 1920x1080
 CPU blur: 87.500 ms
 Wrote CPU blurred image -> output_blur_shared_cpu.png
@@ -79,7 +84,8 @@ D2H transfer : 0.483
 Total GPU    : 1.381
 Speedup (CPU / Total GPU): 63.35x
 Mismatches: 0
-Wrote GPU blurred image -> output_blur_shared_gpu.png `
+Wrote GPU blurred image -> output_blur_shared_gpu.png
+```
 
 ## Sobel Edge Detection
 
@@ -90,7 +96,8 @@ Wrote GPU blurred image -> output_blur_shared_gpu.png `
 <img width="1920" height="1080" alt="output_sobel_cpu" src="https://github.com/user-attachments/assets/b55a1b88-6f27-458f-826a-0373f26b798a" />
 
 ### Performance
-` C:\nvidia-prep\cuda-filters\src>sobel.exe
+```
+C:\nvidia-prep\cuda-filters\src>sobel.exe
 Loaded image: 1920x1080
 CPU Sobel: 112.752 ms
 Wrote CPU sobel image -> output_sobel_cpu.png
@@ -103,5 +110,6 @@ D2H transfer : 0.678
 Total GPU    : 1.908
 Speedup (CPU / Total GPU): 59.09x
 Mismatches: 0
-Wrote GPU sobel image -> output_sobel_gpu.png `
+Wrote GPU sobel image -> output_sobel_gpu.png
+```
 
