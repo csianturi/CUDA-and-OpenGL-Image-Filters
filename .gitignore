@@ -1,0 +1,35 @@
+# CUDA / Visual Studio build files
+*.exe
+*.obj
+*.pdb
+*.idb
+*.ilk
+*.user
+*.suo
+*.aps
+*.ncb
+*.sdf
+*.cachefile
+*.ipch
+*.tlog
+*.log
+*.tmp
+*.db
+*.lib
+*.exp
+*.dll
+
+# VS Code settings
+.vscode/
+
+# Build folders
+build/
+Debug/
+Release/
+x64/
+bin/
+obj/
+
+# System files
+.DS_Store
+Thumbs.db
