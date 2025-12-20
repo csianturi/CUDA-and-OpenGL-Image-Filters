@@ -33,3 +33,17 @@ obj/
 # System files
 .DS_Store
 Thumbs.db
+
+# Ignore Visual Studio temporary files
+.vs/
+out/
+x64/
+Debug/
+Release/
+*.user
+*.pdb
+*.iobj
+*.ipdb
+
+# BUT do not ignore our dependencies
+!Dependencies/
