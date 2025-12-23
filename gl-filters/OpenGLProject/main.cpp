@@ -10,12 +10,12 @@
 // Vertices coordinates
 GLfloat vertices[] =
 {
-	-0.5f, -0.5f * float(sqrt(3)) / 3 , 0.0f,		// lower left corner
-	0.5f, -0.5f * float(sqrt(3)) / 3 , 0.0f,		// lower right corner
-	0.0f, 0.5f * float(sqrt(3)) * 2 / 3 , 0.0f,		// upper corner
-	-0.5f / 2, 0.5f * float(sqrt(3)) / 6 , 0.0f,	// inner left
-	0.5f / 2, 0.5f * float(sqrt(3)) / 6 , 0.0f,		// inner right
-	0.0f , -0.5f * float(sqrt(3)) / 3 , 0.0f,		// inner down
+	-0.5f, -0.5f * float(sqrt(3)) / 3 , 0.0f,	0.8f, 0.3f, 0.02f,	// lower left corner
+	0.5f, -0.5f * float(sqrt(3)) / 3 , 0.0f,	0.8f, 0.3f, 0.02f,	// lower right corner
+	0.0f, 0.5f * float(sqrt(3)) * 2 / 3 , 0.0f,	1.0f, 0.6f, 0.32f,	// upper corner
+	-0.5f / 2, 0.5f * float(sqrt(3)) / 6 , 0.0f,0.9f, 0.45f, 0.17f,	// inner left
+	0.5f / 2, 0.5f * float(sqrt(3)) / 6 , 0.0f,	0.9f, 0.45f, 0.17f,	// inner right
+	0.0f , -0.5f * float(sqrt(3)) / 3 , 0.0f,	0.8f, 0.3f, 0.02f	// inner down
 
 };
 
@@ -50,12 +50,11 @@ int main() {
 
 	//specify the size of the viewport of opengl in the window
 	glViewport(0, 0, 800, 800);
-
+	
+	// ----------- Shader Init ----------------
+	Shader shaderProgram("default.vert", "default.frag");
 
 	// ----------- VAO/VBO/EBO Init ----------------
-	
-	// Generates Shader objects 
-	Shader shaderProgram("default.vert", "default.frag");
 
 	// initialize the VAO and bind it
 	VAO VAO1;
@@ -66,13 +65,16 @@ int main() {
 	EBO EBO1(indices, sizeof(indices));
 
 	// Links VBO to VAO
-	VAO1.LinkVBO(VBO1, 0);
+	// void LinkAttrib(VBO& VBO, GLuint layout, GLuint numComponents, GLenum type, GLsizeiptr stride, void* offset);
+	VAO1.LinkAttrib(VBO1, 0, 3, GL_FLOAT, 6 * sizeof(float), (void*)0);
+	VAO1.LinkAttrib(VBO1, 1, 3, GL_FLOAT, 6 * sizeof(float), (void*)(3 * sizeof(float)));
 
 	// Unbind all to prevent accidental modifications
 	VAO1.Unbind();
 	VBO1.Unbind();
 	EBO1.Unbind();
 
+	GLuint uniID = glGetUniformLocation(shaderProgram.ID, "scale");
 
 	/*
 	// Create reference containers for the Vertex Array Obj and Vertex Buffer Obj and Element Buffer Obj
@@ -120,6 +122,7 @@ int main() {
 		glClear(GL_COLOR_BUFFER_BIT);
 		// Tell OpenGL which shader Program
 		shaderProgram.Activate();
+		glUniform1f(uniID, 0.5f);
 		// bind the VAO so OpenGL knows how to use it
 		VAO1.Bind();
 		// Draw the triangle using the GL_TRIANGLES primitive
