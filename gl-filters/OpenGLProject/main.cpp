@@ -1,8 +1,10 @@
-#include <iostream>
-#include <glad/glad.h>
+#include<iostream>
+#include<glad/glad.h>
 #include<GLFW/glfw3.h>
+#include<stb/stb_image.h>
 
 #include "shaderClass.h"
+#include "Texture.h"
 #include "VAO.h"
 #include "VBO.h"
 #include "EBO.h"
@@ -10,21 +12,18 @@
 // Vertices coordinates
 GLfloat vertices[] =
 {
-	-0.5f, -0.5f * float(sqrt(3)) / 3 , 0.0f,	0.8f, 0.3f, 0.02f,	// lower left corner
-	0.5f, -0.5f * float(sqrt(3)) / 3 , 0.0f,	0.8f, 0.3f, 0.02f,	// lower right corner
-	0.0f, 0.5f * float(sqrt(3)) * 2 / 3 , 0.0f,	1.0f, 0.6f, 0.32f,	// upper corner
-	-0.5f / 2, 0.5f * float(sqrt(3)) / 6 , 0.0f,0.9f, 0.45f, 0.17f,	// inner left
-	0.5f / 2, 0.5f * float(sqrt(3)) / 6 , 0.0f,	0.9f, 0.45f, 0.17f,	// inner right
-	0.0f , -0.5f * float(sqrt(3)) / 3 , 0.0f,	0.8f, 0.3f, 0.02f	// inner down
+	-0.5f, -0.5f, 0.0f,		1.0f, 0.0f, 0.0f,	0.0f, 0.0f, // lower left corner
+	-0.5f,  0.5f, 0.0f,		0.0f, 1.0f, 0.0f,	0.0f, 1.0f, // upper left corner
+	 0.5f,  0.5f, 0.0f,		0.0f, 0.0f, 1.0f,	1.0f, 1.0f, // upper right corner
+	 0.5f, -0.5f, 0.0f,		1.0f, 1.0f, 1.0f,	1.0f, 0.0f, // lower right corner
 
 };
 
-// indices of the vertices Ex. vertices[0],[3],[5] form lower left triangle
+
 GLuint indices[] =
 {
-	0, 3, 5,	// lower left triangle
-	3, 2, 4,	// lower right triangle
-	5, 4, 1		// upper triangle
+	0, 2, 1, // upper triangle
+	0, 3, 2	 // lower triangle
 };
 
 int main() {
@@ -66,15 +65,20 @@ int main() {
 
 	// Links VBO to VAO
 	// void LinkAttrib(VBO& VBO, GLuint layout, GLuint numComponents, GLenum type, GLsizeiptr stride, void* offset);
-	VAO1.LinkAttrib(VBO1, 0, 3, GL_FLOAT, 6 * sizeof(float), (void*)0);
-	VAO1.LinkAttrib(VBO1, 1, 3, GL_FLOAT, 6 * sizeof(float), (void*)(3 * sizeof(float)));
+	VAO1.LinkAttrib(VBO1, 0, 3, GL_FLOAT, 8 * sizeof(float), (void*)0);
+	VAO1.LinkAttrib(VBO1, 1, 3, GL_FLOAT, 8 * sizeof(float), (void*)(3 * sizeof(float)));
+	VAO1.LinkAttrib(VBO1, 2, 2, GL_FLOAT, 8 * sizeof(float), (void*)(6 * sizeof(float)));
 
 	// Unbind all to prevent accidental modifications
 	VAO1.Unbind();
 	VBO1.Unbind();
 	EBO1.Unbind();
 
+	Texture deku("deku.png", GL_TEXTURE_2D, GL_TEXTURE0, GL_RGBA, GL_UNSIGNED_BYTE);
+	deku.texUnit(shaderProgram, "tex0", 0);
+
 	GLuint uniID = glGetUniformLocation(shaderProgram.ID, "scale");
+
 
 	/*
 	// Create reference containers for the Vertex Array Obj and Vertex Buffer Obj and Element Buffer Obj
@@ -123,6 +127,7 @@ int main() {
 		// Tell OpenGL which shader Program
 		shaderProgram.Activate();
 		glUniform1f(uniID, 0.5f);
+		deku.Bind();
 		// bind the VAO so OpenGL knows how to use it
 		VAO1.Bind();
 		// Draw the triangle using the GL_TRIANGLES primitive
@@ -141,7 +146,7 @@ int main() {
 		//glDrawArrays(GL_TRIANGLES, 0, 3);
 		
 		// uses the 9 indices and groups them into 3 triangles based on the indices
-		glDrawElements(GL_TRIANGLES, 9, GL_UNSIGNED_INT, 0);
+		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 		// Swaps the back buffer to the front to display
 		glfwSwapBuffers(window);
 
@@ -153,6 +158,7 @@ int main() {
 	VAO1.Delete();
 	VBO1.Delete();
 	EBO1.Delete();
+	deku.Delete();
 	shaderProgram.Delete();
 
 	glfwDestroyWindow(window);
