@@ -11,6 +11,7 @@
 #include "VAO.h"
 #include "VBO.h"
 #include "EBO.h"
+#include "Camera.h"
 
 
 const unsigned int width = 800;
@@ -89,20 +90,23 @@ int main() {
 	Texture deku("deku.png", GL_TEXTURE_2D, GL_TEXTURE0, GL_RGBA, GL_UNSIGNED_BYTE);
 	deku.texUnit(shaderProgram, "tex0", 0);
 
-	GLuint uniID = glGetUniformLocation(shaderProgram.ID, "scale");
-
-	float rotation = 0.0f;
-	double prevTime = glfwGetTime();
-
 	glEnable(GL_DEPTH_TEST);
 
-
+	Camera camera(width, height, glm::vec3(0.0f, 0.0f, 2.0f));
 
 	// ----------- Render Loop ----------------
 	//		1 iteration is a frame
 
+	float prevTime = 0.0f;
+	float crntTime = 0.0f;
+	float deltaTime = 0.0f;
+
 	while (!glfwWindowShouldClose(window))
 	{
+
+		crntTime = glfwGetTime();
+		deltaTime = crntTime - prevTime;
+		prevTime = crntTime;
 
 		// Draws to the back buffer using the color, shaders, VAO, and actually drawing
 		glClearColor(0.07f, 0.13f, 0.17f, 1.0f);
@@ -110,30 +114,9 @@ int main() {
 		// Tell OpenGL which shader Program
 		shaderProgram.Activate();
 
-		double crntTime = glfwGetTime();
-		if (crntTime - prevTime >= 1 / 60)
-		{
-			rotation += 0.01f;
-			prevTime = crntTime;
-		}
+		camera.Inputs(window, deltaTime);
+		camera.Matrix(45.0f, 0.1f, 100.0f, shaderProgram, "camMatrix");
 
-		glm::mat4 model = glm::mat4(1.0f);
-		glm::mat4 view = glm::mat4(1.0f);
-		glm::mat4 proj = glm::mat4(1.0f);
-
-		model = glm::rotate(model, glm::radians(rotation), glm::vec3(0.0f, 1.0f, 0.0f));
-		view = glm::translate(view, glm::vec3(0.0f, -0.5f, -2.0f));
-		proj = glm::perspective(glm::radians(45.0f), (float)(width / height), 0.1f, 100.0f);
-
-		int modelLoc = glGetUniformLocation(shaderProgram.ID, "model");
-		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-		int viewLoc = glGetUniformLocation(shaderProgram.ID, "view");
-		glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
-		int projLoc = glGetUniformLocation(shaderProgram.ID, "proj");
-		glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(proj));
-
-
-		glUniform1f(uniID, 0.5f);
 		deku.Bind();
 		// bind the VAO so OpenGL knows how to use it
 		VAO1.Bind();
