@@ -2,6 +2,9 @@
 #include<glad/glad.h>
 #include<GLFW/glfw3.h>
 #include<stb/stb_image.h>
+#include<glm/glm.hpp>
+#include <glm/gtc/type_ptr.hpp>
+#include<glm/gtc/matrix_transform.hpp>
 
 #include "shaderClass.h"
 #include "Texture.h"
@@ -9,21 +12,30 @@
 #include "VBO.h"
 #include "EBO.h"
 
+
+const unsigned int width = 800;
+const unsigned int height = 800;
+
+
 // Vertices coordinates
 GLfloat vertices[] =
-{
-	-0.5f, -0.5f, 0.0f,		1.0f, 0.0f, 0.0f,	0.0f, 0.0f, // lower left corner
-	-0.5f,  0.5f, 0.0f,		0.0f, 1.0f, 0.0f,	0.0f, 1.0f, // upper left corner
-	 0.5f,  0.5f, 0.0f,		0.0f, 0.0f, 1.0f,	1.0f, 1.0f, // upper right corner
-	 0.5f, -0.5f, 0.0f,		1.0f, 1.0f, 1.0f,	1.0f, 0.0f, // lower right corner
-
+{ //     COORDINATES     /        COLORS      /   TexCoord  //
+	-0.5f, 0.0f,  0.5f,     0.83f, 0.70f, 0.44f,	0.0f, 0.0f,
+	-0.5f, 0.0f, -0.5f,     0.83f, 0.70f, 0.44f,	5.0f, 0.0f,
+	 0.5f, 0.0f, -0.5f,     0.83f, 0.70f, 0.44f,	0.0f, 0.0f,
+	 0.5f, 0.0f,  0.5f,     0.83f, 0.70f, 0.44f,	5.0f, 0.0f,
+	 0.0f, 0.8f,  0.0f,     0.92f, 0.86f, 0.76f,	2.5f, 5.0f
 };
 
-
+// Indices for vertices order
 GLuint indices[] =
 {
-	0, 2, 1, // upper triangle
-	0, 3, 2	 // lower triangle
+	0, 1, 2,
+	0, 2, 3,
+	0, 1, 4,
+	1, 2, 4,
+	2, 3, 4,
+	3, 0, 4
 };
 
 int main() {
@@ -33,7 +45,7 @@ int main() {
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-	GLFWwindow* window = glfwCreateWindow(800, 800, "OpenGL", NULL, NULL);
+	GLFWwindow* window = glfwCreateWindow(width, height, "OpenGL", NULL, NULL);
 	if (window == NULL)
 	{
 		std::cout << "failed to create window" << std::endl;
@@ -48,7 +60,7 @@ int main() {
 	gladLoadGL();
 
 	//specify the size of the viewport of opengl in the window
-	glViewport(0, 0, 800, 800);
+	glViewport(0, 0, width, height);
 	
 	// ----------- Shader Init ----------------
 	Shader shaderProgram("default.vert", "default.frag");
@@ -79,39 +91,10 @@ int main() {
 
 	GLuint uniID = glGetUniformLocation(shaderProgram.ID, "scale");
 
+	float rotation = 0.0f;
+	double prevTime = glfwGetTime();
 
-	/*
-	// Create reference containers for the Vertex Array Obj and Vertex Buffer Obj and Element Buffer Obj
-	GLuint VBO, VAO, EBO;
-
-	// Generate the VAO, VBO, and EBO with only 1 obj each ( VAO FIRST!!!!)
-	glGenVertexArrays(1, &VAO);
-	glGenBuffers(1, &VBO);
-	glGenBuffers(1, &EBO);
-
-	// Make the VAO the current Vertex Array Obj by binding it
-	glBindVertexArray(VAO); //ACTIVATES
-
-	// Bind the VBO specifying its type 
-	glBindBuffer(GL_ARRAY_BUFFER, VBO);				// make this buffer (VBO) the current vertex attribute buffer
-		
-	// Introduce the vertices into the VBO
-	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-
-	// Bind the EBO specifying its type and allocate and assign its memory
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
-
-	// Configure the Vertex Attribute so that OpenGL knows how to read the VBO
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);		// basically sets VAO configuration
-	// Enable the Vertex Attribute so that OpenGL knows how to use it
-	glEnableVertexAttribArray(0);														
-
-	// Bind both the VAO and VBO so no accidental modifications are made
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-	glBindVertexArray(0);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-	*/
+	glEnable(GL_DEPTH_TEST);
 
 
 
@@ -123,9 +106,33 @@ int main() {
 
 		// Draws to the back buffer using the color, shaders, VAO, and actually drawing
 		glClearColor(0.07f, 0.13f, 0.17f, 1.0f);
-		glClear(GL_COLOR_BUFFER_BIT);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		// Tell OpenGL which shader Program
 		shaderProgram.Activate();
+
+		double crntTime = glfwGetTime();
+		if (crntTime - prevTime >= 1 / 60)
+		{
+			rotation += 0.01f;
+			prevTime = crntTime;
+		}
+
+		glm::mat4 model = glm::mat4(1.0f);
+		glm::mat4 view = glm::mat4(1.0f);
+		glm::mat4 proj = glm::mat4(1.0f);
+
+		model = glm::rotate(model, glm::radians(rotation), glm::vec3(0.0f, 1.0f, 0.0f));
+		view = glm::translate(view, glm::vec3(0.0f, -0.5f, -2.0f));
+		proj = glm::perspective(glm::radians(45.0f), (float)(width / height), 0.1f, 100.0f);
+
+		int modelLoc = glGetUniformLocation(shaderProgram.ID, "model");
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		int viewLoc = glGetUniformLocation(shaderProgram.ID, "view");
+		glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
+		int projLoc = glGetUniformLocation(shaderProgram.ID, "proj");
+		glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(proj));
+
+
 		glUniform1f(uniID, 0.5f);
 		deku.Bind();
 		// bind the VAO so OpenGL knows how to use it
@@ -146,7 +153,7 @@ int main() {
 		//glDrawArrays(GL_TRIANGLES, 0, 3);
 		
 		// uses the 9 indices and groups them into 3 triangles based on the indices
-		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+		glDrawElements(GL_TRIANGLES, sizeof(indices)/sizeof(int), GL_UNSIGNED_INT, 0);
 		// Swaps the back buffer to the front to display
 		glfwSwapBuffers(window);
 

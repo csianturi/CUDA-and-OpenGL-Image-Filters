@@ -77,5 +77,8 @@
     <Image Include="deku.png">
       <Filter>Resource Files\Textures</Filter>
     </Image>
+    <Image Include="brick.png">
+      <Filter>Resource Files\Textures</Filter>
+    </Image>
   </ItemGroup>
 </Project>
