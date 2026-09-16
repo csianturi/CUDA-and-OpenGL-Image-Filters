@@ -1,5 +1,6 @@
 # CUDA and OpenGL Image Filters
 Collection of small CUDA and OpenGL projects for GPU programming practice.
+
 NOTE: OpenGL portion is still in progress!!!!!!
 
 # Projects
