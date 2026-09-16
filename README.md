@@ -1,9 +1,10 @@
 # CUDA and OpenGL Image Filters
 Collection of small CUDA and OpenGL projects for GPU programming practice.
+NOTE: OpenGL portion is still in progress!!!!!!
 
 # Projects
 - **CUDA Image Filters**: Grayscale, blur, Sobel edge detection (with optimized thread block configurations and coalesced memory access patterns)
-- **OpenGL Shader Filters**: Real-time image effects with GLSL
+- **OpenGL Shader Filters**: Real-time image effects with GLSL (in progress)
 
 # CUDA Image Filters
 Applies grayscale, blur, and sobel edge detection to an input 1920x1080 image. CUDA kernels are used to implement the filters and the performance of each are compared against a CPU baseline.
